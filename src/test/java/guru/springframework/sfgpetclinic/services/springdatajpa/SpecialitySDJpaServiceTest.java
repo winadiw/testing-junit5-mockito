@@ -6,8 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -17,6 +21,24 @@ class SpecialitySDJpaServiceTest {
 
     @InjectMocks
     SpecialitySDJpaService service;
+
+    @Test
+    void findByIdTest() {
+        // New speciality object
+        Speciality speciality = new Speciality();
+
+        //When specialtyRepository.findById is called, return an optional data
+        Mockito.when(specialtyRepository.findById(1L)).thenReturn(Optional.of(speciality));
+
+        // Invoke service.findById
+        Speciality foundSpecialty = service.findById(1L);
+
+        // Make sure that service.findById returns data
+        assertThat(foundSpecialty).isNotNull();
+
+        //Make sure that specialtyRepository.findById(1L) only run ONE TIME
+        verify(specialtyRepository).findById(1L);
+    }
 
     @Test
     void deleteById() {
